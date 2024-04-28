@@ -1,0 +1,50 @@
+HomePredictorAI
+/
+├── index.php
+├── connection.php
+├── form.php
+├── actions/
+│   ├── database.php
+│   ├── errorMessage.php
+│   ├── securityAction.php
+│   ├── logoutAction.php
+│   ├── connectionAction.php
+│   ├── formAction.php
+│   └── showTableAction.php
+├── includes/
+│   ├── head.php
+│   ├── navbar.php
+│   ├── addHomeBar.php
+│   └── functions.php
+└── img/
+    ├── logo-light.svg
+    └── logo-dark.svg
+
+Ressources :
+├─── realtimecolors.com
+├─── fontpair.co
+└─── app.haikei.app
+
+Tasks [✔|❌]:
+
+[   ] -> ContactPage
+├────[   ] - Faire la base de la page
+├────[   ] - Bouton fonctionnel
+├────[   ] - Pouvoir voir les données des autres
+└────[   ] - Sécurité
+
+[   ] -> Sécurité contre requête SQL
+
+################################################
+✔ To do list ❌
+[ ✔ ] Faire le readme de mon projet shooterAI
+[ ✔ ] Supprimer le repository de shooterAI-test
+[   ] Mettre sur github la webapp pour collecter les données.
+[   ] Améliorer le readme de HomePredictorAI
+
+Readme
+
+Pour de multiple occasion, il m'arrive de devoir vendre des choses en faisant du porte à porte; par exemple, avec la classe de DNL Physique, je dois vendre des gavottes ou encore au scout, nous vendeons régulièrement des calendriers en début d'année. Cette tâche répetitive me fait penser qu'il doit y avoir un lien entre la maison d'une peronne et la probabilité que cette maison m'achète où non mes produits. C'est pourqoi j'ai eu l'idée de créer une IA capable de prédire si en fonction des crièteres choisi arbitrairement, une personne va ou non m'acheter mes produits.
+
+Mon projet est partagé entre deux "sous-projet". 
+Bien évidement, l'IA qui sera faite en python (je n'ai pas encore commencé) et l'application Web (CRUD) pour collecter les données. Pour le moment, j'ai totalement fini l'applicatin web qui se trouvera dans ./WebApp. J'héberge actuellement le site sur 000webhost.com, l'adresse de mon site est gavottes.000webhostapp.com. Merci de ne pas trop hacker ni de faire d'injection SQL car honnetement, mon site n'est pas très sécurisé et je débute en programmation web. Ma base de donnée est géré avec phpmyadmin et mon site est entièrement fait avec bootstrap.
