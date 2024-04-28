@@ -1,6 +1,17 @@
-# HomePredictorAI
+# HomePredictorAI: Enhancing Door-to-Door Sales with AI
 
-For various occasions, I often find myself selling things door-to-door; for example, with my physics DNL class, I have to sell Gavottes, or as a scout, we regularly sell calendars at the beginning of the year. This repetitive task made me think that there must be a link between a person's home and the probability that this person will buy my products. That's why I came up with the idea of creating an AI capable of predicting whether a person will buy my products based on arbitrarily chosen criteria.
+Do you find yourself often knocking on doors to sell products, whether it's for a school project or a community initiative? I certainly do – whether it's selling Gavottes for my physics DNL class or calendars as a scout, the repetitive nature of door-to-door sales got me thinking. Is there a connection between a person's home and their likelihood to buy my products?
 
-My project is divided into two "sub-projects".
-Of course, there's the AI, which will be developed in Python (I haven't started yet), and the Web Application (CRUD) for collecting data. For now, I've completely finished the web application, which can be found in ./WebApp. I am currently hosting the site on 000webhost.com, and the address of my site is gavottes.000webhostapp.com. Please refrain from hacking or performing SQL injections as honestly, my site is not very secure, and I'm a beginner in web programming. My database is managed with phpMyAdmin, and my site is entirely made with Bootstrap.
+That's where HomePredictorAI comes in. It's my brainchild, aimed at leveraging artificial intelligence to predict whether a person is likely to purchase my products based on various arbitrarily chosen criteria.
+
+## Project Overview:
+
+HomePredictorAI consists of two main components:
+
+1. **AI Development (Python):**
+   The heart of the project lies in the development of an AI system using Python. While I haven't started this part yet, the plan is to train a model to predict purchase likelihood based on input parameters.
+
+2. **Web Application (CRUD):**
+   The web application, located in ./WebApp, serves as a platform for collecting data. I've already completed this aspect of the project. Currently, the site is hosted on 000webhost.com at gavottes.000webhostapp.com. However, I must admit, the site's security measures are not robust, and it's still a work in progress. It's built entirely with Bootstrap and managed with phpMyAdmin.
+
+So, if you're curious about the intersection of home characteristics and purchasing behavior, or if you just want to see how AI can enhance door-to-door sales, stay tuned for updates on HomePredictorAI!
