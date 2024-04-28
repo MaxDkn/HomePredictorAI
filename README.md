@@ -15,9 +15,9 @@ HomePredictorAI consists of two main components:
    The web application, located in ./WebApp, serves as a platform for collecting data. I've already completed this aspect of the project. Currently, the site is hosted on <a href="https://www.000webhost.com/">000webhost.com</a> at <a href="https://gavottes.000webhostapp.com/">gavottes.000webhostapp.com</a>. However, I must admit, the site's security measures are not robust, and it's still a work in progress. It's built entirely with Bootstrap and managed with phpMyAdmin.
 
 <div style="display: flex;">
-    <img src="WebApp/img/templates/index.png" style="flex: 1; width: 33%;">
-    <img src="WebApp/img/templates/form-no.png" style="flex: 1; width: 33%;" >
-   <img src="WebApp/img/templates/update.png" style="flex: 1; width: 33%;" >
+    <img src="WebApp/img/templates/index.png" style="flex: 1; width: 25%;">
+    <img src="WebApp/img/templates/form-no.png" style="flex: 1; width: 25%;" >
+   <img src="WebApp/img/templates/update.png" style="flex: 1; width: 25%;" >
 </div>
 
 So, if you're curious about the intersection of home characteristics and purchasing behavior, or if you just want to see how AI can enhance door-to-door sales, stay tuned for updates on HomePredictorAI!
