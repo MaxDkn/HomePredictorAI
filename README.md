@@ -17,6 +17,7 @@ HomePredictorAI consists of two main components:
 <div style="display: flex;">
     <img src="WebApp/img/templates/index.png" style="flex: 1; width: 33%;">
     <img src="WebApp/img/templates/form-no.png" style="flex: 1; width: 33%;" >
+   <img src="WebApp/img/templates/update.png" style="flex: 1; width: 33%;" >
 </div>
 
 So, if you're curious about the intersection of home characteristics and purchasing behavior, or if you just want to see how AI can enhance door-to-door sales, stay tuned for updates on HomePredictorAI!
