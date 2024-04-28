@@ -12,6 +12,6 @@ HomePredictorAI consists of two main components:
    The heart of the project lies in the development of an AI system using Python. While I haven't started this part yet, the plan is to train a model to predict purchase likelihood based on input parameters.
 
 2. **Web Application (CRUD):**
-   The web application, located in ./WebApp, serves as a platform for collecting data. I've already completed this aspect of the project. Currently, the site is hosted on 000webhost.com at gavottes.000webhostapp.com. However, I must admit, the site's security measures are not robust, and it's still a work in progress. It's built entirely with Bootstrap and managed with phpMyAdmin.
+   The web application, located in ./WebApp, serves as a platform for collecting data. I've already completed this aspect of the project. Currently, the site is hosted on <a href="https://www.000webhost.com/">000webhost.com</a> at <a href="https://gavottes.000webhostapp.com/">gavottes.000webhostapp.com</a>. However, I must admit, the site's security measures are not robust, and it's still a work in progress. It's built entirely with Bootstrap and managed with phpMyAdmin.
 
 So, if you're curious about the intersection of home characteristics and purchasing behavior, or if you just want to see how AI can enhance door-to-door sales, stay tuned for updates on HomePredictorAI!
