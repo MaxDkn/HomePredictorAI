@@ -1,146 +1,162 @@
 import os
 import pickle
 import shutil
+import csv
 
-"""
-I will start with a database in used pickle.
-
-####________________________________FORM :________________________________####
-
-House Address: [Insert address]
-Time of Day: [Insert time]
-
-Did the person respond? : [ ] Yes [ ] No
-
-    Estimated House Size: [ ] Small [ ] Medium [ ] Large
-    Big Security Gate or Alarm: [ ] Yes [ ] No
-    Security : [ ] Yes [ ] No
-    Presence of Dog: [ ] Unknown [ ] Small [ ] Large [ ] None
-    Estimated Age of Person: [ ] Nobody answered [ ] Young [ ] Middle-aged [ ] Elderly
-    Gender of Person: [ ] Male [ ] Female
-    Order Amount: [Insert amount]
-
-Gender : 
-[ ] Male --> 1
-[ ] Female --> 2
-
-
-####________________________________DATA :________________________________####
-
--------------------------------------------------------------------------------
-For every radio button, it returns a number between 0 and the number of options -1
--------------------------------------------------------------------------------
-
-DataBase:
-{f'[House Address]': {'id': int #  Not in the training data, just to have a better organisation 
-                      'Time of Day': int
-                      'House Size': int, 
-                      'Alarm or Microphone': bool, 
-                      'Dog': int, 
-                      'Age' int, 
-                      'Order Amount': int
-                      },
-}
-Person : 
-{'[name]': list -> List with all House's ID of someone,
-}
--------------------------------------------------------------------------------
-DATATEST:
-###____BASE.PKL____###
-{
-'13~Clairville~35510': {'id': 5000
-                        'Time of Day': 15
-                        'House Size': 2, 
-                        'Alarm or Microphone': False, 
-                        'Dog': 0, 
-                        'Age' 3, 
-                        'Order Amount': 4
-                        },
-'64~Fontenelle~35510': {'id': 5001
-                        'Time of Day': 15
-                        'House Size': 3, 
-                        'Alarm or Microphone': True, 
-                        'Dog': 1, 
-                        'Age' 2, 
-                        'Order Amount': 0
-                        },
-'20~Fontenelle~35510': {'id': 5002
-                        'Time of Day': 16
-                        'House Size': 1, 
-                        'Alarm or Microphone': True, 
-                        'Dog': 1, 
-                        'Age' 1, 
-                        'Order Amount': 4
-                        },
-}
-
-###____USER.PKL____###
-{
-'Nikitas~Giakkoupis': [5000], 
-'Max~DECKMYN': [5001, 5002]
-}
-"""
-
-
-#  ###_____________________________CUSTOM EXCEPTION :_____________________________###  #
-class ThisUserAlreadyExists(Exception):
-    def __init__(self, username):
-        super().__init__(
-            f'The user ({username}) you want to add already exists and you cannot have the same user twice.')
-
-
+#  Custom Exception
 class UserNotFoundError(Exception):
     def __init__(self, username):
         super().__init__(f'The user "{username}" does not exist.')
 
 
-class ArgumentFormatError(Exception):
-    """Exception raised when an argument does not match the required format."""
+"""
+i convert my csv database to pickle structure
+-------------------------------------------------------------------------------
+SQLDataBase:
+HomeInformation => HouseID
+                => SellerID
+                => SellerName
+                => HouseAddress
+                => DayTime
+                => Respond [Yes | No]
+                => HouseSize
+                => SecurityGateOrAlarm
+                => Dog
+                => Age
+                => Gender
+                => Price
+Users => ID
+      => Access
+      => FirstConnection
+      => LastConnection
+      => FirstName
+      => LastName
+      => Password
 
-    def __init__(self, arg_name):
-        self.arg_name = arg_name
-        super().__init__(f"The argument '{arg_name}' has an invalid format. "
-                         f"It should be in lowercase with the first letter capitalized, "
-                         f"separated by '~' between first name and name (in uppercase).")
+"""
 
 
-DATATEST_BASE = {
-    '13~Rue~de Clairville~35510': {'id': 1,
-                                   'Time of Day': 15,
-                                   'House Size': 2,
-                                   'Alarm or Microphone': False,
-                                   'Dog': 0,
-                                   'Age': 3,
-                                   'Order Amount': 4
-                                   },
-    '64~Avenue~de la Grande Fontenelle~35510': {'id': 2,
-                                                'Time of Day': 15,
-                                                'House Size': 3,
-                                                'Alarm or Microphone': True,
-                                                'Dog': 1,
-                                                'Age': 2,
-                                                'Order Amount': 0
-                                                },
-    '20~Avenue~de la Grande Fontenelle~35510': {'id': 3,
-                                                'Time of Day': 16,
-                                                'House Size': 1,
-                                                'Alarm or Microphone': True,
-                                                'Dog': 1,
-                                                'Age': 1,
-                                                'Order Amount': 4
-                                                },
-}
-DATATEST_USER = {
-    'Pierre~DUPOND': [2],
-    'Jean~DUPONT': [1, 3]}
+class PickleDataBase:
+    working_path = os.getcwd()
+    tables = ['HomeInformations', 'Users']
+
+    def __init__(self, reboot=True):
+        self.reboot = reboot
+        self.data = self.convert_csv_to_pickle_data()
+        self.training_data_list = self.get_training_data()
+        self.training_data_by_key = {'DayTime': [], 'Respond': [], 'HouseSize': [], 'SecurityGateOrAlarm': [],
+                                     'Dog': [], 'Age': [], 'Gender': [], 'Price': []}
+        self.get_training_data_by_key()
+        self.change_seller_name_format()
+
+    def draw_data(self):
+        for key in self.training_data_by_key.keys():
+            print(key.rjust(20, '-'), ':', end=' [')
+            for value in self.training_data_by_key[key]:
+                print(f'{str(value).center(6)}', end='|')
+            print(']')
+
+    def convert_csv_to_pickle_data(self) -> dict:
+        data = {}
+        for table_name in self.tables:
+            with open(f'/home/maxdeckmyn/Documents/Workspace/Website/HomePredictorAI/App/dataSQL/HomeInformations.csv', 'r') as file:
+                data[table_name] = [row for row in csv.DictReader(file)]
+        return data
+
+    def get_training_data(self):
+        """
+        HomeInformation => HouseID       # This information will not appear in the algorithm
+                        => SellerID      # This information will not appear in the algorithm
+                        => SellerName    # This information will not appear in the algorithm
+                        => HouseAddress  # This information will not appear in the algorithm
+                        => DayTime => conversion of hour minute to just hour in decimal (ex: 16:30 = 16.5)
+                        => Respond [No: 0 | Yes : 1]
+                        => HouseSize [Small: 0 | Medium: 1 | Big: 2]
+                        => SecurityGateOrAlarm [No: 0 | Yes: 1]
+                        => Dog [No: 0 | Unknown: 0 | Small: 1 | Large: 2]
+                        => Age [Young: 0 | Middle-aged: 1 | Elderly: 2]
+                        => Gender [Female: 0 | Male: 1]
+                        => Price
+        """
+        values = {'Respond': {'No': 0, 'Yes': 1},
+                  'HouseSize': {'Small': 0, 'Medium': 1, 'Big': 2},
+                  'SecurityGateOrAlarm': {'No': 0, 'Yes': 1},
+                  'Dog': {'No': 0, 'Unknown': 0, 'Small': 1, 'Large': 2},
+                  'Age': {'Young': 0, 'Middle-aged': 1, 'Elderly': 2, '': None},
+                  'Gender': {'Female': 0, 'Male': 1, '': None}}
+        data_to_return = []
+        for house in self.data['HomeInformations']:
+            data = {}
+            hour, minute = house['DayTime'].split(' ')[1].split(':')
+            data['DayTime'] = int(hour) + int(int(minute) / 6) / 10
+            for key_word in values.keys():
+                data[key_word] = values[key_word][house[key_word]]
+            data['Price'] = house['Price']
+            data_to_return.append(data)
+
+        return data_to_return
+
+    def get_training_data_by_key(self):
+        """
+        HomeInformation => HouseID       # This information will not appear in the algorithm
+                        => SellerID      # This information will not appear in the algorithm
+                        => SellerName    # This information will not appear in the algorithm
+                        => HouseAddress  # This information will not appear in the algorithm
+                        => DayTime => conversion of hour minute to just hour in decimal (ex: 16:30 = 16.5)
+                        => Respond [No: 0 | Yes : 1]
+                        => HouseSize [Small: 0 | Medium: 1 | Big: 2]
+                        => SecurityGateOrAlarm [No: 0 | Yes: 1]
+                        => Dog [No: 0 | Unknown: 0 | Small: 1 | Large: 2]
+                        => Age [Young: 0 | Middle-aged: 1 | Elderly: 2]
+                        => Gender [Female: 0 | Male: 1]
+                        => Price
+        """
+        values = {'Respond': {'No': 0, 'Yes': 1},
+                  'HouseSize': {'Small': 0, 'Medium': 1, 'Big': 2},
+                  'SecurityGateOrAlarm': {'No': 0, 'Yes': 1},
+                  'Dog': {'No': 0, 'Unknown': 0, 'Small': 1, 'Large': 2},
+                  'Age': {'Young': 0, 'Middle-aged': 1, 'Elderly': 2, '': None},
+                  'Gender': {'Female': 0, 'Male': 1, '': None}}
+        for house in self.data['HomeInformations']:
+            data = {}
+            hour, minute = house['DayTime'].split(' ')[1].split(':')
+            self.training_data_by_key['DayTime'].append(int(hour) + int(int(minute) / 6) / 10)
+            for key_word in values.keys():
+                self.training_data_by_key[key_word].append(values[key_word][house[key_word]])
+            self.training_data_by_key['Price'].append(int(house['Price']))
+
+    def change_seller_name_format(self) -> None:
+        """
+        for the moment, the seller name is like this : 'LASTNAME Firstname' and we can have a confusion if the LASTNAME
+        comport space character, so I will change this format to do this :  'LASTNAME~Firstname'
+        this problem is just on the HomeInformations table in the SellerName key.
+        """
+        for row in self.data['HomeInformations']:
+            if len(row['SellerName'].split(' ')) == 2:
+                lastname, firstname = row['SellerName'].split(' ')
+                row['SellerName'] = lastname.upper() + "~" + firstname.title()
+
+    def get_house_by_name(self, lastname, firstname) -> list:
+        access = False
+        user = []
+        for user in self.data['Users']:
+            if user['LastName'] == lastname and user['FirstName'] == firstname:
+                access = True
+                break
+        if not access:
+            raise UserNotFoundError(f'{lastname} {firstname}')
+        house_list = []
+        for house in self.data['HomeInformations']:
+            if house['SellerID'] == user['ID']:
+                house_list.append(house)
+        return house_list
 
 
 class DataBase:
     working_path = os.getcwd()
     extension_files = '.pkl'
 
-    def __init__(self, reboot=False, test_mode=False):
-        self.test_mode = test_mode
+    def __init__(self, reboot=False):
         if reboot:
             self.clear()
         self.create_files()
@@ -159,17 +175,11 @@ class DataBase:
             os.mkdir(f'{self.working_path}/data')
         if not os.path.isfile(f'{self.working_path}/data/main{self.extension_files}'):
             with open(f'{self.working_path}/data/main{self.extension_files}', 'wb') as file:
-                if self.test_mode:
-                    file.write(pickle.dumps(DATATEST_BASE))
-                else:
-                    file.write(pickle.dumps('{}'))
+                file.write(pickle.dumps('{}'))
                 file.close()
         if not os.path.isfile(f'{self.working_path}/data/user{self.extension_files}'):
             with open(f'{self.working_path}/data/user{self.extension_files}', 'wb') as file:
-                if self.test_mode:
-                    file.write(pickle.dumps(DATATEST_USER))
-                else:
-                    file.write(pickle.dumps('{}'))
+                file.write(pickle.dumps('{}'))
                 file.close()
 
     def update_data(self):
@@ -203,46 +213,3 @@ class DataBase:
         with open(f'{self.working_path}/data/user{self.extension_files}', 'wb') as file:
             file.write(pickle.dumps(self.user_data))
             file.close()
-
-    def add_new_user(self, username: str):
-        try:
-            surname, lastname = username.split('~')
-        except ValueError:
-            raise ArgumentFormatError(username)
-        if not lastname.isupper():
-            raise ArgumentFormatError(username)
-        elif not surname.istitle():
-            raise ArgumentFormatError(username)
-
-        if not self.check_user_exist(username):
-            if username not in self.user_data:
-                self.user_data[username] = []
-                self.save_data()
-            else:
-                raise ThisUserAlreadyExists(username)
-        else:
-            raise ThisUserAlreadyExists(username)
-
-    def add_new_house_data(self, username, address, time, size, security, dog, age, amount):
-        if not self.check_user_exist(username):
-            raise ThisUserAlreadyExists(username)
-        else:
-            house_id = self.generate_id()
-            self.main_data[address] = {'id': house_id,
-                                       'Time of Day': int(time),
-                                       'House Size': size,
-                                       'Alarm or Microphone': security,
-                                       'Dog': dog,
-                                       'Age': age,
-                                       'Order Amount': amount
-                                       }
-            self.user_data[username].append(house_id)
-        self.save_data()
-
-    def generate_id(self):
-        #  This function will return a valid and unique ID to house
-        id_max = 0
-        for house_address in self.main_data.keys():
-            id_max = max(int(self.main_data[house_address]['id']), id_max)
-        id_max += 1
-        return id_max

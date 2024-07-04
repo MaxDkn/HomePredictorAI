@@ -1,5 +1,7 @@
-from database_management import DataBase
-
+from database_management import PickleDataBase
+import os
 
 if __name__ == "__main__":
-    db = DataBase(True, True)
+    pickle_data = PickleDataBase()
+    print(pickle_data.get_training_data())
+
